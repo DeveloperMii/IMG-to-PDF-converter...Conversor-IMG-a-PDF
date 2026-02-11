@@ -1,4 +1,4 @@
-#Librerias
+#Libraries
 from pathlib import Path
 from PIL import Image
 from reportlab.pdfgen import canvas
@@ -7,58 +7,53 @@ from reportlab.lib.utils import ImageReader
 from io import BytesIO
 
 #Variables
-Ruta : str = ""
-Opcion = False
-Imagenes : list = []
-Max_caracter : int = 0
-Archivos : list = []
-Ordenados : list = []
+Route : str = ""
+Option = False
+Img : list = []
+Max_character : int = 0
+Files : list = []
+Ordered : list = []
 Pdf : canvas.Canvas = None
-Escalado : bool = False
-Horientacion : int = 3
-Margenes_y : float = 0
-Margenes_x : float = 0
-Porcentage_x : float = 0
-Porcentage_y : float = 0
+Scaling : bool = False
+Orientation : int = 3
 
-#Confirmacion de ruta
+#Route confirmation
 while True:
-    Ruta = ""
-    Ruta = input("En que ruta carpeta estan las imagenes \n(Si es la misma en la que esta este archivo solo pulse enter)\n:  ")
-    if Ruta in ["", "."]:
-        Ruta = str(Path(__file__).parent)
-    if Path(Ruta).exists():
-        print("La ruta escogida es: " + Ruta)
+    Route = ""
+    Route = input("En que ruta carpeta estan las imagenes \n(Si es la misma en la que esta este archivo solo pulse enter)\n:  ")
+    if Route in ["", "."]:
+        Route = str(Path(__file__).parent)
+    if Path(Route).exists():
+        print("La ruta escogida es: " + Route)
         while True:
             match input("Si no esta seguro presione 1 en caso de estar seguro presione 2: "):
                 case "1":
-                    Opcion = False
+                    Option = False
                     break
                 case "2":
-                    Opcion = True
+                    Option = True
                     break
                 case _:
                     print("Ingrese un valor valido")
     else:
         print("La ruta es invalida")
-    if Opcion:
+    if Option:
         break
 
-#Proteccion de sobreescritura
-NameA = ""
-if Path(str(Path(Ruta)) + "/" + str(Path(Ruta).name) +".pdf").exists():
-    NameA = "0"
-    for i in Path(Ruta).iterdir():
-        if i.stem[:len(Path(Ruta).name)] == str(Path(Ruta).name):
-            NameA = str(int(NameA) + 1)
-    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Ruta)) + "/" + str(Path(Ruta).name) + " (" + NameA + ")" + ".pdf", pagesize=A4)
+#Overwrite protection
+NameF = ""
+if Path(str(Path(Route)) + "/" + str(Path(Route).name) +".pdf").exists():
+    NameF = "0"
+    for i in Path(Route).iterdir():
+        if i.stem[:len(Path(Route).name)] == str(Path(Route).name):
+            NameF = str(int(NameF) + 1)
+    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameF + ")" + ".pdf", pagesize=A4)
 else:
-    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Ruta)) + "/" + str(Path(Ruta).name) + ".pdf", pagesize=A4)
-Ancho, Alto = A4
+    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf", pagesize=A4)
+Width, Height = A4
 
-#Seleccionado de imagenes
-for i in Path(Ruta).iterdir():
-    Nombre = ""
+#Image selection
+for i in Path(Route).iterdir():
     chara = 0
     if i.suffix.lower() in [".png", ".jpg", ".jpeg", "webp", ".tiff", ".bmp", "ico"]:
         for j in i.stem:
@@ -66,12 +61,12 @@ for i in Path(Ruta).iterdir():
                 chara = chara + 1
             else:
                 break
-        if chara > Max_caracter:
-            Max_caracter = chara
-        Imagenes.append(i)
+        if chara > Max_character:
+            Max_character = chara
+        Img.append(i)
 
-#Ordenarlos
-for i in Imagenes:
+#Sort them
+for i in Img:
     i = Path(i)
     chara = 0
     for j in i.stem:
@@ -79,91 +74,90 @@ for i in Imagenes:
             chara = chara + 1
         else:
             break
-    Archivos.append(str(str(i.parent) + "/" + str(i.name[:chara]).zfill(Max_caracter) + str(i.name[chara:])))
-Archivos.sort()
+    Files.append(str(str(i.parent) + "/" + str(i.name[:chara]).zfill(Max_character) + str(i.name[chara:])))
+Files.sort()
 
-#Lista con las rutas ordenadas
-for i in range(0, len(Archivos)):
-    Nombre = ""
-    for j in range(0, len(Path(Archivos[i]).stem)):
-        if Path(str(Path(Archivos[i]).parent) + "/" + str(Path(Archivos[i]).stem[j:] + str(Path(Archivos[i]).suffix))).exists():
-            Nombre = Path(Archivos[i]).stem[j:]
-        if Path(Archivos[i]).stem[j] != "0":
+#List with the routes sorted
+for i in range(0, len(Files)):
+    name = ""
+    for j in range(0, len(Path(Files[i]).stem)):
+        if Path(str(Path(Files[i]).parent) + "/" + str(Path(Files[i]).stem[j:] + str(Path(Files[i]).suffix))).exists():
+            name = Path(Files[i]).stem[j:]
+        if Path(Files[i]).stem[j] != "0":
             break
-    Ordenados.append(str(str(Path(Imagenes[i]).parent) + "/" + Nombre + str(Path(Archivos[i]).suffix)))
+    Ordered.append(str(str(Path(Img[i]).parent) + "/" + name + str(Path(Files[i]).suffix)))
 
-#Eleccion de horientacion
+#Choice of orientation
 while True:
     match input("Si quiere que todas las paginas esten en vertical presione 1 \nSi quiere que todas las paginas esten en horizontal presione 2 \nSi quiere que el programa decida la mejor horientacion presione 3 \n: "):
         case "1":
-            Horientacion = 1
+            Orientation = 1
             break
         case "2":
-            Horientacion = 2
+            Orientation = 2
             break
         case "3":
-            Horientacion = 3
+            Orientation = 3
             break
         case _:
             print("Ingrese un valor valido")
 
-#Tipo de escalado
+#Type of scaling
 while True:
     match input("Si quiere las imagenes se escalen con deformacion presione 1 \nSi quiere que las imagenes se escalen sin deformacion aunque queden espacios en blanco presione 2 \n: "):
         case "1":
-            Escalado = False
+            Scaling = False
             break
         case "2":
-            Escalado = True
+            Scaling = True
             break
         case _:
             print("Ingrese un valor valido")
 
 print("Empezando conversion")
 
-#Convertir Pdf
-for i in Ordenados:
-    escalax = 0
-    escalay = 0
+#Create the PDF
+for i in Ordered:
+    scale : list = [0.0,0.0]
     i = Path(i)
     print(str(i.name) + " ha sido integrado")
     with Image.open(i) as img:
         buffer = BytesIO()
         img = img.convert("RGB")
         img.save(buffer, format="JPEG", quality=85, subsampling=2,optimize=True)
-        imagen = ImageReader(buffer)
+        img = ImageReader(buffer)
         img_n : int = img.size[0]
         img_l : int = img.size[1]
-        match Horientacion:
+        match Orientation:
             case 1:
-                Ancho, Alto = portrait(A4)
+                Width, Height = portrait(A4)
             case 2:
-                Ancho, Alto = landscape(A4)
+                Width, Height = landscape(A4)
             case 3:
                 if img_n > img_l:
-                    Ancho, Alto = landscape(A4)
+                    Width, Height = landscape(A4)
                 else:
-                    Ancho, Alto = portrait(A4)
+                    Width, Height = portrait(A4)
             case _:
                 print("error inesperado")
                 break
-        usablex = Ancho * (100 / 100)
-        usabley = Alto * (100 / 100)
-        usablex = usablex - (20 * 2)
-        usabley = usabley - (20 * 2)
-        escalax : float = usablex / img_n
-        escalay : float = usabley / img_l
-        img_n : float = img_n * escalax
-        img_l : float = img_l * escalay
-        x : float = (Ancho - img_n) / 2
-        y : float = (Alto - img_l) / 2
-        Pdf.setPageSize((Ancho, Alto))
-        Pdf.drawImage(imagen, x, y, width=usablex, height=usabley, preserveAspectRatio=Escalado)
+        xsafespace = Width * (100 / 100)
+        ysafespace = Height * (100 / 100)
+        xsafespace = xsafespace - (20 * 2)
+        ysafespace = ysafespace - (20 * 2)
+        scale[0] = xsafespace / img_n
+        scale[1] = ysafespace / img_l
+        img_n : float = img_n * scale[0]
+        img_l : float = img_l * scale[1]
+        x : float = (Width - img_n) / 2
+        y : float = (Height - img_l) / 2
+        Pdf.setPageSize((Width, Height))
+        Pdf.drawImage(img, x, y, width=xsafespace, height=ysafespace, preserveAspectRatio=Scaling)
         Pdf.showPage()
 
 Pdf.save()
-if NameA != "":
-    print("El pdf esta en: " + str(Path(Ruta)) + "/" + str(Path(Ruta).name) + " (" + NameA + ")" + ".pdf")
+if NameF != "":
+    print("El pdf esta en: " + str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameF + ")" + ".pdf")
 else:
-    print("El pdf esta en: " + str(Path(Ruta)) + "/" + str(Path(Ruta).name) + ".pdf")
+    print("El pdf esta en: " + str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf")
 input("Pulse enter para cerrar el programa")

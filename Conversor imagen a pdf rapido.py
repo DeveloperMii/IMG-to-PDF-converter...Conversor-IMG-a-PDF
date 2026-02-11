@@ -1,4 +1,4 @@
-#Librerias
+#Libraries
 from pathlib import Path
 from PIL import Image
 from reportlab.pdfgen import canvas
@@ -7,33 +7,31 @@ from reportlab.lib.utils import ImageReader
 from io import BytesIO
 
 #Variables
-Ruta : str = ""
-Imagenes : list = []
-Max_caracter : int = 0
-Archivos : list = []
-Ordenados : list = []
+Route : str = ""
+Img : list = []
+Max_character : int = 0
+Files : list = []
+Ordered : list = []
 Pdf : canvas.Canvas = None
-Escalado : bool = True
-Ancho : float = None
-Alto : float = None
-buffer = BytesIO()
+Scaling : bool = True
+Width : float = None
+Height : float = None
 
-Ruta = str(Path(__file__).parent)
+Route = str(Path(__file__).parent)
 
-#Proteccion de sobreescritura
+#Overwrite protection
 NameA = ""
-if Path(str(Path(Ruta)) + "/" + str(Path(Ruta).name) +".pdf").exists():
+if Path(str(Path(Route)) + "/" + str(Path(Route).name) +".pdf").exists():
     NameA = "0"
-    for i in Path(Ruta).iterdir():
-        if i.stem[:len(Path(Ruta).name)] == str(Path(Ruta).name):
+    for i in Path(Route).iterdir():
+        if i.stem[:len(Path(Route).name)] == str(Path(Route).name):
             NameA = str(int(NameA) + 1)
-    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Ruta)) + "/" + str(Path(Ruta).name) + " (" + NameA + ")" + ".pdf", pagesize=A4)
+    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameA + ")" + ".pdf", pagesize=A4)
 else:
-    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Ruta)) + "/" + str(Path(Ruta).name) + ".pdf", pagesize=A4)
+    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf", pagesize=A4)
 
-#Seleccionado de imagenes
-for i in Path(Ruta).iterdir():
-    Nombre = ""
+#Image selection
+for i in Path(Route).iterdir():
     chara = 0
     if i.suffix.lower() in [".png", ".jpg", ".jpeg", "webp", ".tiff", ".bmp", "ico"]:
         for j in i.stem:
@@ -41,12 +39,12 @@ for i in Path(Ruta).iterdir():
                 chara = chara + 1
             else:
                 break
-        if chara > Max_caracter:
-            Max_caracter = chara
-        Imagenes.append(i)
+        if chara > Max_character:
+            Max_character = chara
+        Img.append(i)
 
-#Ordenarlos
-for i in Imagenes:
+#Sort them
+for i in Img:
     i = Path(i)
     chara = 0
     for j in i.stem:
@@ -54,23 +52,23 @@ for i in Imagenes:
             chara = chara + 1
         else:
             break
-    Archivos.append(str(str(i.parent) + "/" + str(i.name[:chara]).zfill(Max_caracter) + str(i.name[chara:])))
-Archivos.sort()
+    Files.append(str(str(i.parent) + "/" + str(i.name[:chara]).zfill(Max_character) + str(i.name[chara:])))
+Files.sort()
 
-#Lista con las rutas ordenadas
-for i in range(0, len(Archivos)):
-    Nombre = ""
-    for j in range(0, len(Path(Archivos[i]).stem)):
-        if Path(str(Path(Archivos[i]).parent) + "/" + str(Path(Archivos[i]).stem[j:] + str(Path(Archivos[i]).suffix))).exists():
-            Nombre = Path(Archivos[i]).stem[j:]
-        if Path(Archivos[i]).stem[j] != "0":
+#List with the routes sorted
+for i in range(0, len(Files)):
+    name = ""
+    for j in range(0, len(Path(Files[i]).stem)):
+        if Path(str(Path(Files[i]).parent) + "/" + str(Path(Files[i]).stem[j:] + str(Path(Files[i]).suffix))).exists():
+            name = Path(Files[i]).stem[j:]
+        if Path(Files[i]).stem[j] != "0":
             break
-    Ordenados.append(str(str(Path(Imagenes[i]).parent) + "/" + Nombre + str(Path(Archivos[i]).suffix)))
+    Ordered.append(str(str(Path(Img[i]).parent) + "/" + name + str(Path(Files[i]).suffix)))
 
 print("Empezando conversion")
 
 #Convertir Pdf
-for i in Ordenados:
+for i in Ordered:
     i = Path(i)
     print(str(i.name) + " ha sido integrado")
     with Image.open(i) as img:
@@ -78,15 +76,15 @@ for i in Ordenados:
         img = img.convert("RGB")
         img.save(buffer, format="JPEG", quality=85, subsampling=2,optimize=True)
         buffer.seek(0)
-        imagen = ImageReader(buffer)
+        img = ImageReader(buffer)
         img_n : int = img.size[0]
         img_l : int = img.size[1]
-        Ancho = img_n * 72 / 300
-        Alto = img_l * 72 / 300
+        Width = img_n * 72 / 300
+        Height = img_l * 72 / 300
         x = 0
         y = 0
-        Pdf.setPageSize((Ancho, Alto))
-        Pdf.drawImage(imagen, x, y, width=Ancho, height=Alto, preserveAspectRatio=Escalado)
+        Pdf.setPageSize((Width, Height))
+        Pdf.drawImage(img, x, y, width=Width, height=Height, preserveAspectRatio=Scaling)
         Pdf.showPage()
         buffer.close()
 

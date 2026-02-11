@@ -1,4 +1,4 @@
-#Librerias
+#Libraries
 from pathlib import Path
 from PIL import Image
 from reportlab.pdfgen import canvas
@@ -7,66 +7,65 @@ from reportlab.lib.utils import ImageReader
 from io import BytesIO
 
 #Variables
-Ruta : str = ""
-Imagenes : list = []
-Max_caracter : int = 0
-Archivos : list = []
-Ordenados : list = []
+Route : str = ""
+Img : list = []
+Max_character : int = 0
+Files : list = []
+Ordered : list = []
 Pdf : canvas.Canvas = None
-Escalado : bool = True
-Horientacion : int = 3
-Margenes : dict = {"Sup" : 0.0, "Inf" : 0.0, "Izq" : 0.0, "Der" : 0.0}
-Ancho : float = None
-Alto : float = None
-Formato : list = [0.0,0.0]
-Dinamico : bool = False
-Tamaño : list = [100.0,100.0]
-TTam : int = 1
-PosP : list = [2,2]
-PosM : list = [0.0,0.0]
-TPos : int = 1
+Scaling : bool = True
+Orientation : int = 3
+Margins : dict = {"Top" : 0.0, "Bot" : 0.0, "lef" : 0.0, "Rig" : 0.0}
+Width : float = None
+Height : float = None
+Format : list = [0.0,0.0]
+Dynamic : bool = False
+ImgSize : list = [100.0,100.0]
+SizeType : int = 1
+PPosition : list = [2,2]
+CPosition : list = [0.0,0.0]
+TPosition : int = 1
 
-#Confirmacion de ruta
+#Route confirmation
 while True:
-    opcion = False
-    Ruta = ""
-    Ruta = input("En que ruta carpeta estan las imagenes \n(Si es la misma en la que esta este archivo solo pulse enter)\n:  ").strip()
-    if Ruta in ["", "."]:
-        Ruta = str(Path(__file__).parent)
-    if Path(Ruta).exists():
-        print("La ruta escogida es: " + Ruta)
+    option = False
+    Route = ""
+    Route = input("En que ruta carpeta estan las imagenes \n(Si es la misma en la que esta este archivo solo pulse enter)\n:  ").strip()
+    if Route in ["", "."]:
+        Route = str(Path(__file__).parent)
+    if Path(Route).exists():
+        print("La ruta escogida es: " + Route)
         while True:
             match input("Si no esta seguro presione 1 en caso de estar seguro presione 2: ").strip():
                 case "1":
-                    opcion = False
+                    option = False
                     break
                 case "2":
-                    opcion = True
+                    option = True
                     break
                 case _:
                     print("Ingrese un valor valido")
     else:
         print("La ruta es invalida")
-    if opcion:
+    if option:
         break
 
-print("")
+pritn("")
 
-#Proteccion de sobreescritura
+#Overwrite protection
 NameA = ""
-if Path(str(Path(Ruta)) + "/" + str(Path(Ruta).name) +".pdf").exists():
+if Path(str(Path(Route)) + "/" + str(Path(Route).name) +".pdf").exists():
     NameA = "0"
-    for i in Path(Ruta).iterdir():
-        if i.stem[:len(Path(Ruta).name)] == str(Path(Ruta).name):
+    for i in Path(Route).iterdir():
+        if i.stem[:len(Path(Route).name)] == str(Path(Route).name):
             NameA = str(int(NameA) + 1)
-    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Ruta)) + "/" + str(Path(Ruta).name) + " (" + NameA + ")" + ".pdf", pagesize=A4)
+    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameA + ")" + ".pdf", pagesize=A4)
 else:
-    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Ruta)) + "/" + str(Path(Ruta).name) + ".pdf", pagesize=A4)
-Formato[0], Formato[1] = A4
+    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf", pagesize=A4)
+Format[0], Format[1] = A4
 
-#Seleccionado de imagenes
-for i in Path(Ruta).iterdir():
-    Nombre = ""
+#Image selection
+for i in Path(Route).iterdir():
     chara = 0
     if i.suffix.lower() in [".png", ".jpg", ".jpeg", "webp", ".tiff", ".bmp", "ico"]:
         for j in i.stem:
@@ -74,12 +73,12 @@ for i in Path(Ruta).iterdir():
                 chara = chara + 1
             else:
                 break
-        if chara > Max_caracter:
-            Max_caracter = chara
-        Imagenes.append(i)
+        if chara > Max_character:
+            Max_character = chara
+        Img.append(i)
 
-#Ordenarlos
-for i in Imagenes:
+#Sort them
+for i in Img:
     i = Path(i)
     chara = 0
     for j in i.stem:
@@ -87,145 +86,145 @@ for i in Imagenes:
             chara = chara + 1
         else:
             break
-    Archivos.append(str(str(i.parent) + "/" + str(i.name[:chara]).zfill(Max_caracter) + str(i.name[chara:])))
-Archivos.sort()
+    Files.append(str(str(i.parent) + "/" + str(i.name[:chara]).zfill(Max_character) + str(i.name[chara:])))
+Files.sort()
 
-#Lista con las rutas ordenadas
-for i in range(0, len(Archivos)):
-    Nombre = ""
-    for j in range(0, len(Path(Archivos[i]).stem)):
-        if Path(str(Path(Archivos[i]).parent) + "/" + str(Path(Archivos[i]).stem[j:] + str(Path(Archivos[i]).suffix))).exists():
-            Nombre = Path(Archivos[i]).stem[j:]
-        if Path(Archivos[i]).stem[j] != "0":
+#List with the routes sorted
+for i in range(0, len(Files)):
+    name = ""
+    for j in range(0, len(Path(Files[i]).stem)):
+        if Path(str(Path(Files[i]).parent) + "/" + str(Path(Files[i]).stem[j:] + str(Path(Files[i]).suffix))).exists():
+            name = Path(Files[i]).stem[j:]
+        if Path(Files[i]).stem[j] != "0":
             break
-    Ordenados.append(str(str(Path(Imagenes[i]).parent) + "/" + Nombre + str(Path(Archivos[i]).suffix)))
+    Ordered.append(str(str(Path(Img[i]).parent) + "/" + name + str(Path(Files[i]).suffix)))
 
-#Eleccion del tamaño del pdf
+#Selecting the PDF size
 while True:
-    terminado = False
+    finished = False
     match input("Si quiere seleccionar un tamaño base para el PDF pulse 1 \nSi quiere un tamaño personalizado para el PDF pulse 2 \nSi quiere que el tamaño del PDF sea adaptado para cada imagen pulse 3 \nSi solo se pulsa enter la opcion elegida sera la 1 \n: ").strip():
         case "" | "." | "1":
             match str(input("Selecione el tamaño del papel entre (solo escriba alguna de las siguientes opciones): \n A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, B0, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, LETTER, LEGAL, TABLOID \n Si solo preciona enter se eligira A4 (por ser el mas comun) \n:")).strip().upper():
                 case "A0":
-                    Formato = A0
-                    terminado = True
+                    Format = A0
+                    finished = True
                 case "A1":
-                    Formato = A1
-                    terminado = True
+                    Format = A1
+                    finished = True
                 case "A2":
-                    Formato = A2
-                    terminado = True
+                    Format = A2
+                    finished = True
                 case "A3":
-                    Formato = A3
-                    terminado = True
+                    Format = A3
+                    finished = True
                 case "" | "." | "A4":
-                    Formato = A4
-                    terminado = True
+                    Format = A4
+                    finished = True
                 case "A5":
-                    Formato = A5
-                    terminado = True
+                    Format = A5
+                    finished = True
                 case "A6":
-                    Formato = A6
-                    terminado = True
+                    Format = A6
+                    finished = True
                 case "A7":
-                    Formato = A7
-                    terminado = True
+                    Format = A7
+                    finished = True
                 case "A8":
-                    Formato = A8
-                    terminado = True
+                    Format = A8
+                    finished = True
                 case "A9":
-                    Formato = A9
-                    terminado = True
+                    Format = A9
+                    finished = True
                 case "A10":
-                    Formato = A10
-                    terminado = True
+                    Format = A10
+                    finished = True
                 case "B0":
-                    Formato = B0
-                    terminado = True
+                    Format = B0
+                    finished = True
                 case "B1":
-                    Formato = B1
-                    terminado = True
+                    Format = B1
+                    finished = True
                 case "B2":
-                    Formato = B2
-                    terminado = True
+                    Format = B2
+                    finished = True
                 case "B3":
-                    Formato = B3
-                    terminado = True
+                    Format = B3
+                    finished = True
                 case "B4":
-                    Formato = B4
-                    terminado = True
+                    Format = B4
+                    finished = True
                 case "B5":
-                    Formato = B5
-                    terminado = True
+                    Format = B5
+                    finished = True
                 case "B6":
-                    Formato = B6
-                    terminado = True
+                    Format = B6
+                    finished = True
                 case "B7":
-                    Formato = B7
-                    terminado = True
+                    Format = B7
+                    finished = True
                 case "B8":
-                    Formato = B8
-                    terminado = True
+                    Format = B8
+                    finished = True
                 case "B9":
-                    Formato = B9
-                    terminado = True
+                    Format = B9
+                    finished = True
                 case "B10":
-                    Formato = B10
-                    terminado = True
+                    Format = B10
+                    finished = True
                 case "LETTER":
-                    Formato = LETTER
-                    terminado = True
+                    Format = LETTER
+                    finished = True
                 case "LEGAL":
-                    Formato = LEGAL
-                    terminado = True
+                    Format = LEGAL
+                    finished = True
                 case "TABLOID":
-                    Formato = TABLOID
-                    terminado = True
+                    Format = TABLOID
+                    finished = True
                 case _:
                     print("Ingrese una opcion valida \nVolviendo al inicio")
         case "2":
             match input("Si los valores los tiene en alguna medida fisica pulse 1 \nSi los valores los tiene en PT (72 PT = 1 inch) pulse 2 \n:").strip():
                 case "1":
-                    medidas : list = ["", ""]
-                    tipo = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch \n: ").strip().lower()
-                    match tipo:
+                    measures : list = ["", ""]
+                    type = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch \n: ").strip().lower()
+                    match type:
                         case "mm", "cm", "inch":
                             while True:
-                                valido = True
-                                medidas[0] = input("Ingrese la medida horizontal en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[0]:
+                                validated = True
+                                measures[0] = input("Ingrese la medida horizontal en unidad escogida (solo el valor): ").strip()
+                                for i in measures[0]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[0].replace(",", ".")
-                                if valido:
+                                        measures[0].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[1] = input("Ingrese la medida vertical en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[1]:
+                                validated = True
+                                measures[1] = input("Ingrese la medida vertical en unidad escogida (solo el valor): ").strip()
+                                for i in measures[1]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
-                            if tipo == "mm":
-                                Formato[0] = float(medidas[0]) * (72 / 25.4)
-                                Formato[1] = float(medidas[1]) * (72 / 25.4)
-                                terminado = True
-                            elif tipo == "cm":
-                                Formato[0] = float(medidas[0]) * (72 / 2.54)
-                                Formato[1] = float(medidas[1]) * (72 / 2.54)
-                                terminado = True
+                            if type == "mm":
+                                Format[0] = float(measures[0]) * (72 / 25.4)
+                                Format[1] = float(measures[1]) * (72 / 25.4)
+                                finished = True
+                            elif type == "cm":
+                                Format[0] = float(measures[0]) * (72 / 2.54)
+                                Format[1] = float(measures[1]) * (72 / 2.54)
+                                finished = True
                             else:
-                                Formato[0] = float(medidas[0]) * 72
-                                Formato[1] = float(medidas[1]) * 72
-                                terminado = True
+                                Format[0] = float(measures[0]) * 72
+                                Format[1] = float(measures[1]) * 72
+                                finished = True
                         case _:
                             print("ingrese una unidad valida \nVolviendo al inicio")
                 case "2":
@@ -233,34 +232,34 @@ while True:
                         case "1":
                             print("Volviendo al inicio")
                         case "2":
-                            medidas : list = ["", ""]
+                            measures : list = ["", ""]
                             while True:
-                                valido = True
-                                medidas[0] = input("Ingrese el tamaño horizontal del PDF en PT (72 PT = 1 inch):  ").strip()
-                                for i in medidas[0]:
+                                validated = True
+                                measures[0] = input("Ingrese el tamaño horizontal del PDF en PT (72 PT = 1 inch):  ").strip()
+                                for i in measures[0]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[0].replace(",", ".")
-                                if valido:
+                                        measures[0].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[1] = input("Ingrese el tamaño vertical del PDF en PT (72 PT = 1 inch):  ").strip()
-                                for i in medidas[1]:
+                                validated = True
+                                measures[1] = input("Ingrese el tamaño vertical del PDF en PT (72 PT = 1 inch):  ").strip()
+                                for i in measures[1]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
-                            Formato[0] = float(medidas[0])
-                            Formato[1] = float(medidas[1])
-                            terminado = True
+                            Format[0] = float(measures[0])
+                            Format[1] = float(measures[1])
+                            finished = True
                         case _:
                             print("Ingrese una opcion valida \nVolviendo al inicio")
         case "3":
@@ -268,151 +267,151 @@ while True:
                 case "1":
                     print("Volviendo al inicio")
                 case "2":
-                    Dinamico = True
-                    terminado = True
+                    Dynamic = True
+                    finished = True
                 case _:
                     print("Ingrese una opcion valida \nVolviendo al inicio")
         case _:
             print("Ingrese una opcion valida")
-    if terminado:
+    if finished:
         break
 
 print("")
 
-#Eleccion de horientacion
-if not Dinamico:
+#Choice of orientation
+if not Dynamic:
     while True:
         match input("Si quiere que todas las paginas esten en vertical presione 1 \nSi quiere que todas las paginas esten en horizontal presione 2 \nSi quiere que el programa decida la mejor horientacion presione 3 \nSi solo se pulsa enter la opcion elegida sera la 1: ").strip():
             case ""|"."|"1":
-                Horientacion = 1
+                Orientation = 1
                 break
             case "2":
-                Horientacion = 2
+                Orientation = 2
                 break
             case "3":
-                Horientacion = 3
+                Orientation = 3
                 break
             case _:
                 print("Ingrese un valor valido")
     print("")
 
-#Eleccion de margenes
+#Margin selection
 while True:
-    terminado = False
+    finished = False
     match input("Si quiere seleccionar un tamaño base para los margenes pulse 1 \nSi quiere un tamaño personalizado para los margenes pulse 2 \nSi solo se pulsa enter la opcion elegida sera la 1 \n: ").strip():
         case "" | "." | "1":
             match input("Selecione el tamaño del papel entre (solo escriba el numero indice de alguna de las siguientes opciones): \n 1. Ninguno  0mm  0cm  0inch  0PT \n 2. Muy estrecho  10mm  1cm  0.39inch  28.35PT \n 3. Estrecho  15mm  1.5cm  0.59inch  42.52PT \n 4. Estandar  25mm  2.5cm  1inch  72PT \n 5. Ancho  30mm  3cm  1.18inch  85.04PT \n 6. Muy Ancho 40mm  4cm  1.57inch  113.39PT \n Si solo preciona enter se eligira 4. Estandar (por ser el mas comun) \n:").strip():
                 case "1":
-                    Margenes["Sup"] = 0.0
-                    Margenes["Inf"] = 0.0
-                    Margenes["Izq"] = 0.0
-                    Margenes["Der"] = 0.0
-                    terminado = True
+                    Margins["Top"] = 0.0
+                    Margins["Bot"] = 0.0
+                    Margins["lef"] = 0.0
+                    Margins["Rig"] = 0.0
+                    finished = True
                 case "2":
-                    Margenes["Sup"] = 28.35
-                    Margenes["Inf"] = 28.35
-                    Margenes["Izq"] = 28.35
-                    Margenes["Der"] = 28.35
-                    terminado = True
+                    Margins["Top"] = 28.35
+                    Margins["Bot"] = 28.35
+                    Margins["lef"] = 28.35
+                    Margins["Rig"] = 28.35
+                    finished = True
                 case "3":
-                    Margenes["Sup"] = 42.52
-                    Margenes["Inf"] = 42.52
-                    Margenes["Izq"] = 42.52
-                    Margenes["Der"] = 42.52
-                    terminado = True
+                    Margins["Top"] = 42.52
+                    Margins["Bot"] = 42.52
+                    Margins["lef"] = 42.52
+                    Margins["Rig"] = 42.52
+                    finished = True
                 case "." | "" | "4":
-                    Margenes["Sup"] = 72.0
-                    Margenes["Inf"] = 72.0
-                    Margenes["Izq"] = 72.0
-                    Margenes["Der"] = 72.0
-                    terminado = True
+                    Margins["Top"] = 72.0
+                    Margins["Bot"] = 72.0
+                    Margins["lef"] = 72.0
+                    Margins["Rig"] = 72.0
+                    finished = True
                 case "5":
-                    Margenes["Sup"] = 85.04
-                    Margenes["Inf"] = 85.04
-                    Margenes["Izq"] = 85.04
-                    Margenes["Der"] = 85.04
-                    terminado = True
+                    Margins["Top"] = 85.04
+                    Margins["Bot"] = 85.04
+                    Margins["lef"] = 85.04
+                    Margins["Rig"] = 85.04
+                    finished = True
                 case "6":
-                    Margenes["Sup"] = 113.39
-                    Margenes["Inf"] = 113.39
-                    Margenes["Izq"] = 113.39
-                    Margenes["Der"] = 113.39
-                    terminado = True
+                    Margins["Top"] = 113.39
+                    Margins["Bot"] = 113.39
+                    Margins["lef"] = 113.39
+                    Margins["Rig"] = 113.39
+                    finished = True
                 case _:
                     print("Ingrese una opcion valida \nVolviendo al inicio")
         case "2":
             match input("Si los valores los tiene en alguna medida fisica pulse 1 \nSi los valores los tiene en PT (72 PT = 1 inch) pulse 2").strip():
                 case "1":
-                    medidas : list = ["", "", "", ""]
-                    tipo = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch \n: ").strip().lower()
-                    match tipo:
+                    measures : list = ["", "", "", ""]
+                    type = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch \n: ").strip().lower()
+                    match type:
                         case "mm" | "cm" | "inch":
                             while True:
-                                valido = True
-                                medidas[0] = input("Ingrese la medida del margen superior en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[0]:
+                                validated = True
+                                measures[0] = input("Ingrese la medida del margen superior en unidad escogida (solo el valor): ").strip()
+                                for i in measures[0]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[0].replace(",", ".")
-                                if valido:
+                                        measures[0].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[1] = input("Ingrese la medida del margen inferior en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[1]:
+                                validated = True
+                                measures[1] = input("Ingrese la medida del margen inferior en unidad escogida (solo el valor): ").strip()
+                                for i in measures[1]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[2] = input("Ingrese la medida margen izquierdo en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[2]:
+                                validated = True
+                                measures[2] = input("Ingrese la medida margen izquierdo en unidad escogida (solo el valor): ").strip()
+                                for i in measures[2]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[2].replace(",", ".")
-                                if valido:
+                                        measures[2].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[3] = input("Ingrese la medida del margen derecho en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[3]:
+                                validated = True
+                                measures[3] = input("Ingrese la medida del margen derecho en unidad escogida (solo el valor): ").strip()
+                                for i in measures[3]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
-                            if tipo == "mm":
-                                Margenes["Sup"] = float(medidas[0]) * (72 / 25.4)
-                                Margenes["Inf"] = float(medidas[1]) * (72 / 25.4)
-                                Margenes["Izq"] = float(medidas[2]) * (72 / 25.4)
-                                Margenes["Der"] = float(medidas[3]) * (72 / 25.4)
-                                terminado = True
-                            elif tipo == "cm":
-                                Margenes["Sup"] = float(medidas[0]) * (72 / 2.54)
-                                Margenes["Inf"] = float(medidas[1]) * (72 / 2.54)
-                                Margenes["Izq"] = float(medidas[2]) * (72 / 2.54)
-                                Margenes["Der"] = float(medidas[3]) * (72 / 2.54)
-                                terminado = True
+                            if type == "mm":
+                                Margins["Top"] = float(measures[0]) * (72 / 25.4)
+                                Margins["Bot"] = float(measures[1]) * (72 / 25.4)
+                                Margins["lef"] = float(measures[2]) * (72 / 25.4)
+                                Margins["Rig"] = float(measures[3]) * (72 / 25.4)
+                                finished = True
+                            elif type == "cm":
+                                Margins["Top"] = float(measures[0]) * (72 / 2.54)
+                                Margins["Bot"] = float(measures[1]) * (72 / 2.54)
+                                Margins["lef"] = float(measures[2]) * (72 / 2.54)
+                                Margins["Rig"] = float(measures[3]) * (72 / 2.54)
+                                finished = True
                             else:
-                                Margenes["Sup"] = float(medidas[0]) * 72
-                                Margenes["Inf"] = float(medidas[1]) * 72
-                                Margenes["Izq"] = float(medidas[2]) * 72
-                                Margenes["Der"] = float(medidas[3]) * 72
-                                terminado = True
+                                Margins["Top"] = float(measures[0]) * 72
+                                Margins["Bot"] = float(measures[1]) * 72
+                                Margins["lef"] = float(measures[2]) * 72
+                                Margins["Rig"] = float(measures[3]) * 72
+                                finished = True
                         case _:
                             print("ingrese una unidad valida \nVolviendo al inicio")
                 case "2":
@@ -420,124 +419,124 @@ while True:
                         case "1":
                             print("Volviendo al inicio")
                         case "2":
-                            medidas : list = ["", "", "", ""]
+                            measures : list = ["", "", "", ""]
                             while True:
-                                valido = True
-                                medidas[0] = input("Ingrese la medida del margen superior en PT (72 PT = 1 inch): ").strip()
-                                for i in medidas[0]:
+                                validated = True
+                                measures[0] = input("Ingrese la medida del margen superior en PT (72 PT = 1 inch): ").strip()
+                                for i in measures[0]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[0].replace(",", ".")
-                                if valido:
+                                        measures[0].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[1] = input("Ingrese la medida del margen inferior en PT (72 PT = 1 inch): ").strip()
-                                for i in medidas[1]:
+                                validated = True
+                                measures[1] = input("Ingrese la medida del margen inferior en PT (72 PT = 1 inch): ").strip()
+                                for i in measures[1]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[2] = input("Ingrese la medida margen izquierdo en PT (72 PT = 1 inch): ").strip()
-                                for i in medidas[2]:
+                                validated = True
+                                measures[2] = input("Ingrese la medida margen izquierdo en PT (72 PT = 1 inch): ").strip()
+                                for i in measures[2]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[2].replace(",", ".")
-                                if valido:
+                                        measures[2].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[3] = input("Ingrese la medida del margen derecho en PT (72 PT = 1 inch): ").strip()
-                                for i in medidas[3]:
+                                validated = True
+                                measures[3] = input("Ingrese la medida del margen derecho en PT (72 PT = 1 inch): ").strip()
+                                for i in measures[3]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
-                            Margenes["Sup"] = float(medidas[0])
-                            Margenes["Inf"] = float(medidas[1])
-                            Margenes["Izq"] = float(medidas[2])
-                            Margenes["Der"] = float(medidas[3])
-                            terminado = True
+                            Margins["Top"] = float(measures[0])
+                            Margins["Bot"] = float(measures[1])
+                            Margins["lef"] = float(measures[2])
+                            Margins["Rig"] = float(measures[3])
+                            finished = True
                         case _:
                             print("Ingrese una opcion valida \nVolviendo al inicio")
         case _:
             print("Ingrese una opcion valida")
-    if terminado:
+    if finished:
         break
 
 print("")
 
-#Tamaño de imagen
+#Image size selection
 while True:
-    terminado = False
+    finished = False
     match input("Si quiere que la imagen ocupe todo el espacio posible pulse 1 \nSi quiere que la imagen tenga un tamaño personalizado pulse 2 (Cabe resaltar que si ese tamaño es mayor al de la pagina la imagen puede cortarse) \nSi solo se pulsa enter la opcion elegida sera la 1 \n: ").strip():
         case "" | "." | "1":
-            TTam = 1
-            Tamaño[0] = 100
-            Tamaño[1] = 100
-            terminado = True
+            SizeType = 1
+            ImgSize[0] = 100
+            ImgSize[1] = 100
+            finished = True
         case "2":
             match input("Si los valores los tiene en alguna medida fisica pulse 1 \nSi los valores los tiene en PT (72 PT = 1 inch) pulse 2 \nSi los valores los tiene en porcentage pulse 3 \n: ").strip():
                 case "1":
-                    medidas : list = ["", ""]
-                    tipo = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch \n: ").strip().lower()
-                    match tipo:
+                    measures : list = ["", ""]
+                    type = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch \n: ").strip().lower()
+                    match type:
                         case "mm", "cm", "inch":
                             while True:
-                                valido = True
-                                medidas[0] = input("Ingrese la tamaño horizontal en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[0]:
+                                validated = True
+                                measures[0] = input("Ingrese la tamaño horizontal en unidad escogida (solo el valor): ").strip()
+                                for i in measures[0]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[0].replace(",", ".")
-                                if valido:
+                                        measures[0].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[1] = input("Ingrese la tamaño vertical en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[1]:
+                                validated = True
+                                measures[1] = input("Ingrese la tamaño vertical en unidad escogida (solo el valor): ").strip()
+                                for i in measures[1]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
-                            if tipo == "mm":
-                                Tamaño[0] = float(medidas[0]) * (72 / 25.4)
-                                Tamaño[1] = float(medidas[1]) * (72 / 25.4)
-                                TTam = 2
-                                terminado = True
-                            elif tipo == "cm":
-                                Tamaño[0] = float(medidas[0]) * (72 / 2.54)
-                                Tamaño[1] = float(medidas[1]) * (72 / 2.54)
-                                TTam = 2
-                                terminado = True
+                            if type == "mm":
+                                ImgSize[0] = float(measures[0]) * (72 / 25.4)
+                                ImgSize[1] = float(measures[1]) * (72 / 25.4)
+                                SizeType = 2
+                                finished = True
+                            elif type == "cm":
+                                ImgSize[0] = float(measures[0]) * (72 / 2.54)
+                                ImgSize[1] = float(measures[1]) * (72 / 2.54)
+                                SizeType = 2
+                                finished = True
                             else:
-                                Tamaño[0] = float(medidas[0]) * 72
-                                Tamaño[1] = float(medidas[1]) * 72
-                                TTam = 2
-                                terminado = True
+                                ImgSize[0] = float(measures[0]) * 72
+                                ImgSize[1] = float(measures[1]) * 72
+                                SizeType = 2
+                                finished = True
                         case _:
                             print("ingrese una unidad valida \nVolviendo al inicio")
                 case "2":
@@ -545,35 +544,35 @@ while True:
                         case "1":
                             print("Volviendo al inicio")
                         case "2":
-                            medidas : list = ["", ""]
+                            measures : list = ["", ""]
                             while True:
-                                valido = True
-                                medidas[0] = input("Ingrese el tamaño horizontal de la imagen en PT (72 PT = 1 inch):  ").strip()
-                                for i in medidas[0]:
+                                validated = True
+                                measures[0] = input("Ingrese el tamaño horizontal de la imagen en PT (72 PT = 1 inch):  ").strip()
+                                for i in measures[0]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[0].replace(",", ".")
-                                if valido:
+                                        measures[0].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[1] = input("Ingrese el tamaño vertical de la imagen en PT (72 PT = 1 inch):  ").strip()
-                                for i in medidas[1]:
+                                validated = True
+                                measures[1] = input("Ingrese el tamaño vertical de la imagen en PT (72 PT = 1 inch):  ").strip()
+                                for i in measures[1]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
-                            Tamaño[0] = float(medidas[0])
-                            Tamaño[1] = float(medidas[1])
-                            TTam = 2
-                            terminado = True
+                            ImgSize[0] = float(measures[0])
+                            ImgSize[1] = float(measures[1])
+                            SizeType = 2
+                            finished = True
                         case _:
                             print("Ingrese una opcion valida \nVolviendo al inicio")
                 case "3":
@@ -581,162 +580,162 @@ while True:
                         case "1":
                             print("Volviendo al inicio")
                         case "2":
-                            medidas : list = ["", ""]
+                            measures : list = ["", ""]
                             while True:
-                                valido = True
-                                medidas[0] = input("Ingrese el tamaño horizontal de la imagen en porcentaje:  ").strip()
-                                for i in medidas[0]:
+                                validated = True
+                                measures[0] = input("Ingrese el tamaño horizontal de la imagen en porcentaje:  ").strip()
+                                for i in measures[0]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",",","%"]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[0].replace(",", ".")
+                                        measures[0].replace(",", ".")
                                     if i == "%":
-                                        medidas[0].replace("%", "")
-                                if valido:
+                                        measures[0].replace("%", "")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[1] = input("Ingrese el tamaño vertical de la imagen en porcentaje:  ").strip()
-                                for i in medidas[1]:
+                                validated = True
+                                measures[1] = input("Ingrese el tamaño vertical de la imagen en porcentaje:  ").strip()
+                                for i in measures[1]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",",","%"]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
+                                        measures[1].replace(",", ".")
                                     if i == "%":
-                                        medidas[1].replace("%", "")
-                                if valido:
+                                        measures[1].replace("%", "")
+                                if validated:
                                     break
-                            Tamaño[0] = float(medidas[0])
-                            Tamaño[1] = float(medidas[1])
-                            TTam = 1
-                            terminado = True
+                            ImgSize[0] = float(measures[0])
+                            ImgSize[1] = float(measures[1])
+                            SizeType = 1
+                            finished = True
                         case _:
                             print("Ingrese una opcion valida \nVolviendo al inicio")
         case _:
             print("Ingrese una opcion valida")
-    if terminado:
+    if finished:
         break
 
 print("")
 
-#Tipo de escalado
+#Scaling type selection
 while True:
     match input("Si quiere las imagenes se escalen usando todo el espacio disponible pero con deformacion presione 1 \nSi quiere que las imagenes se escalen sin deformacion aunque no se use todo el espacio disponible presione 2 \nSi solo se pulsa enter la opcion elegida sera la 2 \n: ").strip():
         case "1":
-            Escalado = False
+            Scaling = False
             break
         case "" | "." | "2":
-            Escalado = True
+            Scaling = True
             break
         case _:
             print("Ingrese un valor valido")
 
 print("")
 
-#Selector de posicion
+#Position selection
 while True:
-    terminado = False
+    finished = False
     match input("Si quiere una posicion predefinida pulse 1 \nSi quiere una posicion personalizada personalizado pulse 2 (Ante valores que no concuerden con el tamaño de la hoja pueden exister recortes en la imagen) \nSi solo se pulsa enter la opcion elegida sera la 1 \n: ").strip():
         case "" | "." | "1":
             match input("Elija una de las siguentes posiciones (solo ingrese el indice) (si solo presiona enter la opcion 5 centro sera la predeterminada) \n 1. Sup Izq 2. Sup Cen 3. Sup Der \n 4. Cen Izq 5. Centro  6. Cen Der \n 7. Inf Izq 8. Inf Cen 9. Inf Der \n:").strip():
                 case "1":
-                    PosP[0] = 1
-                    PosP[1] = 1
-                    TPos = 1
-                    terminado = True
+                    PPosition[0] = 1
+                    PPosition[1] = 1
+                    TPosition = 1
+                    finished = True
                 case "2":
-                    PosP[0] = 1
-                    PosP[1] = 2
-                    TPos = 1
-                    terminado = True
+                    PPosition[0] = 1
+                    PPosition[1] = 2
+                    TPosition = 1
+                    finished = True
                 case "3":
-                    PosP[0] = 1
-                    PosP[1] = 3
-                    TPos = 1
-                    terminado = True
+                    PPosition[0] = 1
+                    PPosition[1] = 3
+                    TPosition = 1
+                    finished = True
                 case "4":
-                    PosP[0] = 2
-                    PosP[1] = 1
-                    TPos = 1
-                    terminado = True
+                    PPosition[0] = 2
+                    PPosition[1] = 1
+                    TPosition = 1
+                    finished = True
                 case "" | "." | "5":
-                    PosP[0] = 2
-                    PosP[1] = 2
-                    TPos = 1
-                    terminado = True
+                    PPosition[0] = 2
+                    PPosition[1] = 2
+                    TPosition = 1
+                    finished = True
                 case "6":
-                    PosP[0] = 2
-                    PosP[1] = 3
-                    TPos = 1
-                    terminado = True
+                    PPosition[0] = 2
+                    PPosition[1] = 3
+                    TPosition = 1
+                    finished = True
                 case "7":
-                    PosP[0] = 3
-                    PosP[1] = 1
-                    TPos = 1
-                    terminado = True
+                    PPosition[0] = 3
+                    PPosition[1] = 1
+                    TPosition = 1
+                    finished = True
                 case "8":
-                    PosP[0] = 3
-                    PosP[1] = 2
-                    TPos = 1
-                    terminado = True
+                    PPosition[0] = 3
+                    PPosition[1] = 2
+                    TPosition = 1
+                    finished = True
                 case "9":
-                    PosP[0] = 3
-                    PosP[1] = 3
-                    TPos = 1
-                    terminado = True
+                    PPosition[0] = 3
+                    PPosition[1] = 3
+                    TPosition = 1
+                    finished = True
                 case _:
                     print("Ingrese una opcion valida \nVolviendo al inicio")
         case "2":
             input("Antes de pasar con las medidas me gustaria explicar que el punto de referencia para tomarlas es la esquina inferior izquierda de la imagen")
             match input("Si los valores los tiene en alguna medida fisica pulse 1 \nSi los valores los tiene en PT (72 PT = 1 inch) pulse 2 \n: ").strip():
                 case "1":
-                    medidas : list = ["", ""]
-                    tipo = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch \n: ").strip().lower()
-                    match tipo:
+                    measures : list = ["", ""]
+                    type = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch \n: ").strip().lower()
+                    match type:
                         case "mm", "cm", "inch":
                             while True:
-                                valido = True
-                                medidas[0] = input("Ingrese la posicion horizontal en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[0]:
+                                validated = True
+                                measures[0] = input("Ingrese la posicion horizontal en unidad escogida (solo el valor): ").strip()
+                                for i in measures[0]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[0].replace(",", ".")
-                                if valido:
+                                        measures[0].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[1] = input("Ingrese la posicion vertical en unidad escogida (solo el valor): ").strip()
-                                for i in medidas[1]:
+                                validated = True
+                                measures[1] = input("Ingrese la posicion vertical en unidad escogida (solo el valor): ").strip()
+                                for i in measures[1]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
-                            if tipo == "mm":
-                                PosM[0] = float(medidas[0]) * (72 / 25.4)
-                                PosM[1] = float(medidas[1]) * (72 / 25.4)
-                                TPos = 2
-                                terminado = True
-                            elif tipo == "cm":
-                                PosM[0] = float(medidas[0]) * (72 / 2.54)
-                                PosM[1] = float(medidas[1]) * (72 / 2.54)
-                                TPos = 2
-                                terminado = True
+                            if type == "mm":
+                                CPosition[0] = float(measures[0]) * (72 / 25.4)
+                                CPosition[1] = float(measures[1]) * (72 / 25.4)
+                                TPosition = 2
+                                finished = True
+                            elif type == "cm":
+                                CPosition[0] = float(measures[0]) * (72 / 2.54)
+                                CPosition[1] = float(measures[1]) * (72 / 2.54)
+                                TPosition = 2
+                                finished = True
                             else:
-                                PosM[0] = float(medidas[0]) * 72
-                                PosM[1] = float(medidas[1]) * 72
-                                TPos = 2
-                                terminado = True
+                                CPosition[0] = float(measures[0]) * 72
+                                CPosition[1] = float(measures[1]) * 72
+                                TPosition = 2
+                                finished = True
                         case _:
                             print("ingrese una unidad valida \nVolviendo al inicio")
                 case "2":
@@ -744,46 +743,46 @@ while True:
                         case "1":
                             print("Volviendo al inicio")
                         case "2":
-                            medidas : list = ["", ""]
+                            measures : list = ["", ""]
                             while True:
-                                valido = True
-                                medidas[0] = input("Ingrese el posicion horizontal de la imagen en PT (72 PT = 1 inch):  ").strip()
-                                for i in medidas[0]:
+                                validated = True
+                                measures[0] = input("Ingrese el posicion horizontal de la imagen en PT (72 PT = 1 inch):  ").strip()
+                                for i in measures[0]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[0].replace(",", ".")
-                                if valido:
+                                        measures[0].replace(",", ".")
+                                if validated:
                                     break
                             while True:
-                                valido = True
-                                medidas[1] = input("Ingrese el posicion vertical de la imagen en PT (72 PT = 1 inch):  ").strip()
-                                for i in medidas[1]:
+                                validated = True
+                                measures[1] = input("Ingrese el posicion vertical de la imagen en PT (72 PT = 1 inch):  ").strip()
+                                for i in measures[1]:
                                     if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
-                                        valido = False
+                                        validated = False
                                         print("Ingrese un valor valido")
                                         break
                                     if i == ",":
-                                        medidas[1].replace(",", ".")
-                                if valido:
+                                        measures[1].replace(",", ".")
+                                if validated:
                                     break
-                            PosM[0] = float(medidas[0])
-                            PosM[1] = float(medidas[1])
-                            TPos = 2
-                            terminado = True
+                            CPosition[0] = float(measures[0])
+                            CPosition[1] = float(measures[1])
+                            TPosition = 2
+                            finished = True
                         case _:
                             print("Ingrese una opcion valida \nVolviendo al inicio")
         case _:
             print("Ingrese una opcion valida")
-    if terminado:
+    if finished:
         break
 
 print("Empezando conversion")
 
-#Convertir Pdf
-for i in Ordenados:
+#Create the PDF
+for i in Ordered:
     i = Path(i)
     print(str(i.name) + " ha sido integrado")
     with Image.open(i) as img:
@@ -793,69 +792,69 @@ for i in Ordenados:
         imagen = ImageReader(buffer)
         img_n : int = img.size[0]
         img_l : int = img.size[1]
-        usablex = 0.0
-        usabley = 0.0
+        xsafespace = 0.0
+        ysafespace = 0.0
         imgtx = 0.0
         imgty = 0.0
         x = 0.0
         y = 0.0
-        if Dinamico:
-            Ancho = img_n * 72 / 300
-            Alto = img_l * 72 / 300
+        if Dynamic:
+            Width = img_n * 72 / 300
+            Height = img_l * 72 / 300
         else:
-            match Horientacion:
+            match Orientation:
                 case 1:
-                    Ancho, Alto = portrait(Formato)
+                    Width, Height = portrait(Format)
                 case 2:
-                    Ancho, Alto = landscape(Formato)
+                    Width, Height = landscape(Format)
                 case 3:
                     if img_n > img_l:
-                        Ancho, Alto = landscape(Formato)
+                        Width, Height = landscape(Format)
                     else:
-                        Ancho, Alto = portrait(Formato)
+                        Width, Height = portrait(Format)
                 case _:
                     print("Error inesperado")
                     break
-        usablex = Ancho - Margenes["Izq"] - Margenes["Der"]
-        usabley = Alto - Margenes["Sup"] - Margenes["Sup"]
-        match TTam:
+        xsafespace = Width - Margins["lef"] - Margins["Rig"]
+        ysafespace = Height - Margins["Top"] - Margins["Top"]
+        match SizeType:
             case 1:
-                imgtx = usablex * (Tamaño[0] / 100)
-                imgty = usabley * (Tamaño[1] / 100)
+                imgtx =  xsafespace * (ImgSize[0] / 100)
+                imgty = ysafespace * (ImgSize[1] / 100)
             case 2:
-                imgtx = Tamaño[0]
-                imgty = Tamaño[1]
+                imgtx = ImgSize[0]
+                imgty = ImgSize[1]
             case _:
                 print("Error inesperado")
-        if TPos == 1:
-            match PosP[0]:
+        if TPosition == 1:
+            match PPosition[0]:
                 case 1:
-                    x = Margenes["Izq"]
+                    x = Margins["lef"]
                 case 2:
-                    x = ((Ancho - imgtx) / 2) - Margenes["Der"] + Margenes["Izq"]
+                    x = ((Width - imgtx) / 2) - Margins["Rig"] + Margins["lef"]
                 case 3:
-                    x = Ancho - Margenes["Der"] - imgtx
+                    x = Width - Margins["Rig"] - imgtx
                 case _:
                     print("Error inesperado")
-            match PosP[1]:
+            match PPosition[1]:
                 case 1:
-                    y = Margenes["Inf"]
+                    y = Margins["Bot"]
                 case 2:
-                    y = ((Alto - imgty) / 2) - Margenes["Sup"] + Margenes["Inf"]
+                    y = ((Height - imgty) / 2) - Margins["Top"] + Margins["Bot"]
                 case 3:
-                    y = Alto - Margenes["Sup"] - imgty
+                    y = Height - Margins["Top"] - imgty
                 case _:
                     print("Error inesperado")
         else:
-            x = PosM[0]
-            y = PosM[1]
-        Pdf.setPageSize((Ancho, Alto))
-        Pdf.drawImage(imagen, x, y, width=imgtx, height=imgty, preserveAspectRatio=Escalado)
+            x = CPosition[0]
+            y = CPosition[1]
+        Pdf.setPageSize((Width, Height))
+        Pdf.drawImage(imagen, x, y, width=imgtx, height=imgty, preserveAspectRatio=Scaling)
         Pdf.showPage()
 
 Pdf.save()
 if NameA != "":
-    print("El pdf esta en: " + str(Path(Ruta)) + "/" + str(Path(Ruta).name) + " (" + NameA + ")" + ".pdf")
+    print("El pdf esta en: " + str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameA + ")" + ".pdf")
 else:
-    print("El pdf esta en: " + str(Path(Ruta)) + "/" + str(Path(Ruta).name) + ".pdf")
+    print("El pdf esta en: " + str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf")
 input("Pulse enter para cerrar el programa")

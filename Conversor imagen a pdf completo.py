@@ -50,7 +50,7 @@ while True:
     if option:
         break
 
-pritn("")
+print("")
 
 #Overwrite protection
 NameA = ""

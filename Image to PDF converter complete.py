@@ -30,13 +30,13 @@ TPosition : int = 1
 while True:
     option = False
     Route = ""
-    Route = input("¿En que ruta carpeta estan las imagenes? \n(Si es la misma en la que esta este archivo, solo pulse enter) \n :  ").strip()
+    Route = input("In which folder are the images located? \n(If it is the same folder as this file, just press Enter)\n:  ").strip()
     if Route in ["", "."]:
         Route = str(Path(__file__).parent)
     if Path(Route).exists():
-        print("La ruta escogida es: " + Route)
+        print("The chosen route is: " + Route)
         while True:
-            match input("Si no esta seguro, presione 1 \nSi esta seguro, presione 2 \n : ").strip():
+            match input("If you are unsure, press 1 \nIf you are sure, press 2 \n : ").strip():
                 case "1":
                     option = False
                     break
@@ -44,9 +44,9 @@ while True:
                     option = True
                     break
                 case _:
-                    print("Ingrese un valor valido")
+                    print("Enter a valid value")
     else:
-        print("La ruta es invalida")
+        print("The route is invalid")
     if option:
         break
 
@@ -102,9 +102,9 @@ for i in range(0, len(Files)):
 #Selecting the PDF size
 while True:
     finished = False
-    match input("Si quiere seleccionar un tamaño base para el PDF, pulse 1 \nSi quiere un tamaño personalizado para el PDF, pulse 2 \nSi quiere que el tamaño del PDF sea adaptado para cada imagen, pulse 3 \nSi solo se pulsa enter, la opcion elegida sera la 1 \n : ").strip():
+    match input("If you want to select a base size for the PDF, press 1 \nIf you want a custom size for the PDF, press 2 \nIf you want the PDF size to be adapted for each image, press 3 \nIf you just press enter, the chosen option will be 1 \n : ").strip():
         case "" | "." | "1":
-            match str(input("Selecione el tamaño del papel entre (solo escriba alguna de las siguientes opciones): \n A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, B0, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, LETTER, LEGAL, TABLOID \nSi solo preciona enter, se eligira A4 (por ser el mas comun) \n :")).strip().upper():
+            match str(input("Select the paper size from (just type one of the following options): \n A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, B0, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, LETTER, LEGAL, TABLOID \nIf you just press Enter, A4 will be selected (as it is the most common) \n :")).strip().upper():
                 case "A0":
                     Format = A0
                     finished = True
@@ -181,19 +181,19 @@ while True:
                     Format = TABLOID
                     finished = True
                 case _:
-                    print("Ingrese una opcion valida \nVolviendo al inicio")
+                    print("Enter a valid option \nReturning to the beginning")
         case "2":
             measures : list = ["", ""]
-            type = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch  pt \n (72 PT = 1 inch)\n : ").strip().lower()
+            type = input("Choose one of the following units (Write it as shown below): \n mm  cm  inch  pt \n (72 PT = 1 inch) \n : ").strip().lower()
             match type:
                 case "mm" | "cm" | "inch" | "pt":
                     while True:
                         validated = True
-                        measures[0] = input("Ingrese la medida horizontal en unidad escogida (solo el valor): ").strip()
+                        measures[0] = input("Enter the horizontal measurement in the selected unit (value only): ").strip()
                         for i in measures[0]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[0].replace(",", ".")
@@ -201,11 +201,11 @@ while True:
                             break
                     while True:
                         validated = True
-                        measures[1] = input("Ingrese la medida vertical en unidad escogida (solo el valor): ").strip()
+                        measures[1] = input("Enter the vertical measurement in the selected unit (value only): ").strip()
                         for i in measures[1]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[1].replace(",", ".")
@@ -228,18 +228,18 @@ while True:
                         Format[1] = float(measures[1])
                         finished = True
                 case _:
-                    print("ingrese una unidad valida \nVolviendo al inicio")
+                    print("Enter a valid unit \nReturning to the beginning")
         case "3":
-            match input("Si no esta seguro, presione 1 \nSi esta seguro, presione 2 \n : ").strip():
+            match input("If you are unsure, press 1 \nIf you are sure, press 2 \n : ").strip():
                 case "1":
-                    print("Volviendo al inicio")
+                    print("Back to the beginning")
                 case "2":
                     Dynamic = True
                     finished = True
                 case _:
-                    print("Ingrese una opcion valida \nVolviendo al inicio")
+                    print("Enter a valid unit \nReturning to the beginning")
         case _:
-            print("Ingrese una opcion valida")
+            print("Enter a valid option")
     if finished:
         break
 
@@ -248,7 +248,7 @@ print("")
 #Choice of orientation
 if not Dynamic:
     while True:
-        match input("Si quiere que todas las paginas esten en vertical, presione 1 \nSi quiere que todas las paginas esten en horizontal, presione 2 \nSi quiere que el programa decida la mejor horientacion, presione 3 \nSi solo se pulsa enter, la opcion elegida sera la 1 \n : ").strip():
+        match input("If you want all pages to be vertical, press 1 \nIf you want all pages to be horizontal, press 2 \nIf you want the program to decide the best orientation, press 3 \nIf you just press Enter, the default option will be 1 \n : ").strip():
             case "" | "." | "1":
                 Orientation = 1
                 break
@@ -259,15 +259,15 @@ if not Dynamic:
                 Orientation = 3
                 break
             case _:
-                print("Ingrese un valor valido")
+                print("Enter a valid value")
     print("")
 
 #Margin selection
 while True:
     finished = False
-    match input("Si quiere seleccionar un tamaño base para los margenes, pulse 1 \nSi quiere un tamaño personalizado para los margenes, pulse 2 \nSi solo se pulsa enter, la opcion elegida sera la 1 \n: ").strip():
+    match input("If you want to select a default margin size, press 1 \nIf you want a custom margin size, press 2 \nIf you just press Enter, the first option will be selected. \n : ").strip():
         case "" | "." | "1":
-            match input("Selecione el tamaño del papel entre (solo escriba el numero indice de alguna de las siguientes opciones): \n 1. Ninguno  0mm  0cm  0inch  0PT \n 2. Muy estrecho  10mm  1cm  0.39inch  28.35PT \n 3. Estrecho  15mm  1.5cm  0.59inch  42.52PT \n 4. Estandar  25mm  2.5cm  1inch  72PT \n 5. Ancho  30mm  3cm  1.18inch  85.04PT \n 6. Muy Ancho 40mm  4cm  1.57inch  113.39PT \n Si solo preciona enter se eligira 4. Estandar (por ser el mas comun) \n:").strip():
+            match input("Select the paper size from (just type the index number of one of the following options): \n 1. None  0mm  0cm  0inch  0PT \n 2. Very narrow  10mm  1cm  0.39inch  28.35PT \n 3. Narrow  15mm  1.5cm  0.59inch  42.52PT \n 4. Standard  25mm  2.5cm  1inch  72PT \n 5. Wide  30mm  3cm  1.18inch  85.04PT \n 6. Very Wide 40mm  4cm  1.57inch  113.39PT \n If you just press enter, 4. Standard will be selected (as it is the most common) \n :").strip():
                 case "1":
                     Margins["Top"] = 0.0
                     Margins["Bot"] = 0.0
@@ -305,19 +305,19 @@ while True:
                     Margins["Rig"] = 113.39
                     finished = True
                 case _:
-                    print("Ingrese una opcion valida \nVolviendo al inicio")
+                    print("Enter a valid unit \nReturning to the beginning")
         case "2":
             measures : list = ["", "", "", ""]
-            type = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch  pt \n (72 PT = 1 inch)\n : ").strip().lower()
+            type = input("Choose one of the following units (Write it as shown below): \n mm  cm  inch  pt \n (72 PT = 1 inch)\n : ").strip().lower()
             match type:
                 case "mm" | "cm" | "inch" | "pt":
                     while True:
                         validated = True
-                        measures[0] = input("Ingrese la medida del margen superior en unidad escogida (solo el valor): ").strip()
+                        measures[0] = input("Enter the top margin measurement in the selected unit (value only): ").strip()
                         for i in measures[0]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[0].replace(",", ".")
@@ -325,11 +325,11 @@ while True:
                             break
                     while True:
                         validated = True
-                        measures[1] = input("Ingrese la medida del margen inferior en unidad escogida (solo el valor): ").strip()
+                        measures[1] = input("Enter the bottom margin measurement in the selected unit (value only): ").strip()
                         for i in measures[1]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[1].replace(",", ".")
@@ -337,11 +337,11 @@ while True:
                             break
                     while True:
                         validated = True
-                        measures[2] = input("Ingrese la medida margen izquierdo en unidad escogida (solo el valor): ").strip()
+                        measures[2] = input("Enter the left margin measurement in the selected unit (value only): ").strip()
                         for i in measures[2]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[2].replace(",", ".")
@@ -349,11 +349,11 @@ while True:
                             break
                     while True:
                         validated = True
-                        measures[3] = input("Ingrese la medida del margen derecho en unidad escogida (solo el valor): ").strip()
+                        measures[3] = input("Enter the right margin measurement in the selected unit (value only): ").strip()
                         for i in measures[3]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[1].replace(",", ".")
@@ -384,9 +384,9 @@ while True:
                         Margins["Rig"] = float(measures[3])
                         finished = True
                 case _:
-                    print("ingrese una unidad valida \nVolviendo al inicio")
+                    print("Enter a valid unit \nBack to the beginning")
         case _:
-            print("Ingrese una opcion valida")
+            print("Enter a valid option")
     if finished:
         break
 
@@ -395,7 +395,7 @@ print("")
 #Image size selection
 while True:
     finished = False
-    match input("Si quiere que la imagen ocupe todo el espacio posible pulse 1 \nSi quiere que la imagen tenga un tamaño personalizado pulse 2 (Cabe resaltar que si ese tamaño es mayor al de la pagina la imagen puede cortarse) \nSi solo se pulsa enter la opcion elegida sera la 1 \n : ").strip():
+    match input("If you want the image to occupy as much space as possible, press 1 \nIf you want the image to have a custom size, press 2 (Please note that if this size is larger than the page, the image may be cropped) \nIf you just press Enter, option 1 will be selected \n : ").strip():
         case "" | "." | "1":
             SizeType = 1
             ImgSize[0] = 100
@@ -403,16 +403,16 @@ while True:
             finished = True
         case "2":
             measures : list = ["", ""]
-            type = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch  pt  % \n (72 PT = 1 inch)\n : ").strip().lower()
+            type = input("Choose one of the following units (Write it as shown below): \n mm  cm  inch  pt  % \n (72 PT = 1 inch)\n : ").strip().lower()
             match type:
                 case "mm" | "cm" | "inch" | "pt" | "%":
                     while True:
                         validated = True
-                        measures[0] = input("Ingrese la tamaño horizontal en unidad escogida (solo el valor): ").strip()
+                        measures[0] = input("Enter the horizontal size in the selected unit (value only): ").strip()
                         for i in measures[0]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[0].replace(",", ".")
@@ -420,11 +420,11 @@ while True:
                             break
                     while True:
                         validated = True
-                        measures[1] = input("Ingrese la tamaño vertical en unidad escogida (solo el valor): ").strip()
+                        measures[1] = input("Enter the vertical size in the selected unit (value only): ").strip()
                         for i in measures[1]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[1].replace(",", ".")
@@ -456,9 +456,9 @@ while True:
                         SizeType = 1
                         finished = True
                 case _:
-                    print("ingrese una unidad valida \nVolviendo al inicio")
+                    print("Enter a valid unit \nBack to the beginning")
         case _:
-            print("Ingrese una opcion valida")
+            print("Enter a valid option")
     if finished:
         break
 
@@ -466,7 +466,7 @@ print("")
 
 #Scaling type selection
 while True:
-    match input("Si quiere las imagenes se escalen usando todo el espacio disponible pero con deformacion, presione 1 \nSi quiere que las imagenes se escalen sin deformacion aunque no se use todo el espacio disponible, presione 2 \nSi solo se pulsa enter, la opcion elegida sera la 2 \n: ").strip():
+    match input("If you want the images to be scaled using all available space but with distortion, press 1 \nIf you want the images to be scaled without distortion even if all available space is not used, press 2 \nIf you just press Enter, option 2 will be selected \n : ").strip():
         case "1":
             Scaling = False
             break
@@ -474,16 +474,16 @@ while True:
             Scaling = True
             break
         case _:
-            print("Ingrese un valor valido")
+            print("Enter a valid value")
 
 print("")
 
 #Position selection
 while True:
     finished = False
-    match input("Si quiere una posicion predefinida pulse 1 \nSi quiere una posicion personalizada personalizado pulse 2 (Ante valores que no concuerden con el tamaño de la hoja pueden exister recortes en la imagen) \nSi solo se pulsa enter la opcion elegida sera la 1 \n: ").strip():
+    match input("If you want a predefined position, press 1 \nIf you want a custom position, press 2 (if the values do not match the size of the sheet, the image may be cropped) \nIf you just press Enter, option 1 will be selected. \n : ").strip():
         case "" | "." | "1":
-            match input("Elija una de las siguentes posiciones (solo ingrese el indice) \nSi solo presiona enter, la opcion 5 centro sera la predeterminada \n 1. Sup Izq 2. Sup Cen 3. Sup Der \n 4. Cen Izq 5. Centro  6. Cen Der \n 7. Inf Izq 8. Inf Cen 9. Inf Der \n:").strip():
+            match input("Select one of the following positions (just enter the index) \nIf you just press enter, option 5 center will be the default \n 1. Top Left 2. Top Cen 3. Top Rig \n 4. Bot Lef 5. Center  6. Bot Rig \n 7. Bot Lef 8. Bot Cen 9. Bot Rig \n:").strip():
                 case "1":
                     PPosition[0] = 1
                     PPosition[1] = 1
@@ -530,20 +530,20 @@ while True:
                     TPosition = 1
                     finished = True
                 case _:
-                    print("Ingrese una opcion valida \nVolviendo al inicio")
+                    print("Enter a valid unit \nReturning to the beginning")
         case "2":
-            input("Antes de pasar con las medidas me gustaria explicar que el punto de referencia para tomarlas es la esquina inferior izquierda de la imagen")
+            input("Before moving on to the measurements, I would like to explain that the reference point for taking them is the lower left corner of the image")
             measures : list = ["", ""]
-            type = input("Escoja una de las siguientes unidades (Escribala como vera acontinuacion): \n mm  cm  inch  pt \n (72 PT = 1 inch)\n : ").strip().lower()
+            type = input("Choose one of the following units (Write it as shown below): \n mm  cm  inch  pt \n (72 PT = 1 inch) \n : ").strip().lower()
             match type:
-                case "mm" | "cm" | "inch":
+                case "mm" | "cm" | "inch" | "pt":
                     while True:
                         validated = True
-                        measures[0] = input("Ingrese la posicion horizontal en unidad escogida (solo el valor): ").strip()
+                        measures[0] = input("Enter the horizontal position in the selected unit (value only).: ").strip()
                         for i in measures[0]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[0].replace(",", ".")
@@ -551,11 +551,11 @@ while True:
                             break
                     while True:
                         validated = True
-                        measures[1] = input("Ingrese la posicion vertical en unidad escogida (solo el valor): ").strip()
+                        measures[1] = input("Enter the vertical position in the selected unit (value only).: ").strip()
                         for i in measures[1]:
                             if not i in ["0","1","2","3","4","5","6","7","8","9",".",","]:
                                 validated = False
-                                print("Ingrese un valor valido")
+                                print("Enter a valid value")
                                 break
                             if i == ",":
                                 measures[1].replace(",", ".")
@@ -582,18 +582,18 @@ while True:
                         TPosition = 2
                         finished = True
                 case _:
-                    print("ingrese una unidad valida \nVolviendo al inicio")
+                    print("Enter a valid unit \nBack to the beginning")
         case _:
-            print("Ingrese una opcion valida")
+            print("Enter a valid option")
     if finished:
         break
 
-print("Empezando conversion")
+print("Starting conversion")
 
 #Create the PDF
 for i in Ordered:
     i = Path(i)
-    print(str(i.name) + " ha sido integrado")
+    print(str(i.name) + " has been integrated")
     with Image.open(i) as img:
         buffer = BytesIO()
         img = img.convert("RGB")
@@ -622,7 +622,7 @@ for i in Ordered:
                     else:
                         Width, Height = portrait(Format)
                 case _:
-                    print("Error inesperado")
+                    print("unexpected error")
                     break
         xsafespace = Width - Margins["lef"] - Margins["Rig"]
         ysafespace = Height - Margins["Top"] - Margins["Top"]
@@ -634,7 +634,7 @@ for i in Ordered:
                 imgtx = ImgSize[0]
                 imgty = ImgSize[1]
             case _:
-                print("Error inesperado")
+                print("unexpected error")
         if TPosition == 1:
             match PPosition[0]:
                 case 1:
@@ -644,7 +644,7 @@ for i in Ordered:
                 case 3:
                     x = Width - Margins["Rig"] - imgtx
                 case _:
-                    print("Error inesperado")
+                    print("unexpected error")
             match PPosition[1]:
                 case 1:
                     y = Margins["Bot"]
@@ -653,7 +653,7 @@ for i in Ordered:
                 case 3:
                     y = Height - Margins["Top"] - imgty
                 case _:
-                    print("Error inesperado")
+                    print("unexpected error")
         else:
             x = CPosition[0]
             y = CPosition[1]
@@ -663,7 +663,8 @@ for i in Ordered:
 
 Pdf.save()
 if NameA != "":
-    print("El pdf esta en: " + str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameA + ")" + ".pdf")
+    print("The PDF is in: " + str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameA + ")" + ".pdf")
 else:
-    print("El pdf esta en: " + str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf")
-input("Pulse enter para cerrar el programa")
+    print("The PDF is in: " + str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf")
+    
+input("Press Enter to close the program")

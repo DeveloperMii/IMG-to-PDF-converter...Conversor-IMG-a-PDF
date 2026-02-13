@@ -20,13 +20,13 @@ Orientation : int = 3
 #Route confirmation
 while True:
     Route = ""
-    Route = input("¿En que ruta carpeta estan las imagenes? \n(Si es la misma en la que esta este archivo, solo pulse enter) \n :  ")
+    Route = input("In which folder are the images located? \n(If it is the same folder as this file, just press Enter)\n:  ")
     if Route in ["", "."]:
         Route = str(Path(__file__).parent)
     if Path(Route).exists():
-        print("La ruta escogida es: " + Route)
+        print("The chosen route is: " + Route)
         while True:
-            match input("Si no esta seguro, presione 1 \nSi esta seguro, presione 2 \n : "):
+            match input("If you are unsure, press 1 \nIf you are sure, press 2: "):
                 case "1":
                     Option = False
                     break
@@ -34,9 +34,9 @@ while True:
                     Option = True
                     break
                 case _:
-                    print("Ingrese un valor valido")
+                    print("Enter a valid value")
     else:
-        print("La ruta es invalida")
+        print("The route is invalid")
     if Option:
         break
 
@@ -89,7 +89,7 @@ for i in range(0, len(Files)):
 
 #Choice of orientation
 while True:
-    match input("Si quiere que todas las paginas esten en vertical, presione 1 \nSi quiere que todas las paginas esten en horizontal, presione 2 \nSi quiere que el programa decida la mejor horientacion, presione 3 \nSi solo se pulsa enter, la opcion elegida sera la 1 \n : "):
+    match input("If you want all pages to be vertical, press 1 \nIf you want all pages to be horizontal, press 2 \nIf you want the program to decide the best orientation, press 3 \nIf you just press Enter, the default option will be 1 \n : "):
         case "" | "." | "1":
             Orientation = 1
             break
@@ -100,11 +100,11 @@ while True:
             Orientation = 3
             break
         case _:
-            print("Ingrese un valor valido")
+            print("Enter a valid value")
 
 #Type of scaling
 while True:
-    match input("Si quiere las imagenes se escalen usando todo el espacio disponible pero con deformacion, presione 1 \nSi quiere que las imagenes se escalen sin deformacion aunque no se use todo el espacio disponible, presione 2 \nSi solo se pulsa enter, la opcion elegida sera la 2 \n: "):
+    match input("If you want the images to be scaled using all available space but with distortion, press 1 \nIf you want the images to be scaled without distortion even if all available space is not used, press 2 \nIf you just press Enter, option 2 will be selected \n: "):
         case "1":
             Scaling = False
             break
@@ -112,15 +112,15 @@ while True:
             Scaling = True
             break
         case _:
-            print("Ingrese un valor valido")
+            print("Enter a valid value")
 
-print("Empezando conversion")
+print("Starting conversion")
 
 #Create the PDF
 for i in Ordered:
     scale : list = [0.0,0.0]
     i = Path(i)
-    print(str(i.name) + " ha sido integrado")
+    print(str(i.name) + " has been integrated")
     with Image.open(i) as img:
         buffer = BytesIO()
         img = img.convert("RGB")
@@ -139,7 +139,7 @@ for i in Ordered:
                 else:
                     Width, Height = portrait(A4)
             case _:
-                print("error inesperado")
+                print("unexpected error")
                 break
         xsafespace = Width * (100 / 100)
         ysafespace = Height * (100 / 100)
@@ -157,8 +157,8 @@ for i in Ordered:
 
 Pdf.save()
 if NameF != "":
-    print("El pdf esta en: " + str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameF + ")" + ".pdf")
+    print("The PDF is in: " + str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameF + ")" + ".pdf")
 else:
-    print("El pdf esta en: " + str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf")
+    print("The PDF is in: " + str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf")
 
-input("Pulse enter para cerrar el programa")
+input("Press Enter to close the program")

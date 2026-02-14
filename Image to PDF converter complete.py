@@ -54,20 +54,24 @@ print("")
 
 #Overwrite protection
 NameA = ""
-if Path(str(Path(Route)) + "/" + str(Path(Route).name) +".pdf").exists():
-    NameA = "0"
+if Path(str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf").exists():
+    NameA = "1"
     for i in Path(Route).iterdir():
         if i.stem[:len(Path(Route).name)] == str(Path(Route).name):
-            NameA = str(int(NameA) + 1)
+            if Path(str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameA + ")" + ".pdf").exists():
+                NameA = str(int(NameA) + 1)
+            else:
+                break
     Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameA + ")" + ".pdf", pagesize=A4)
 else:
     Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf", pagesize=A4)
+
 Format[0], Format[1] = A4
 
 #Image selection
 for i in Path(Route).iterdir():
     chara = 0
-    if i.suffix.lower() in [".png", ".jpg", ".jpeg", "webp", ".tiff", ".bmp", "ico"]:
+    if i.suffix.lower() in [".png", ".jpg", ".jpeg", ".webp", ".tiff", ".bmp", "ico"]:
         for j in i.stem:
             if j in ["0","1","2","3","4","5","6","7","8","9"]:
                 chara = chara + 1
@@ -598,7 +602,7 @@ for i in Ordered:
         buffer = BytesIO()
         img = img.convert("RGB")
         img.save(buffer, format="JPEG", quality=85, subsampling=2,optimize=True)
-        imagen = ImageReader(buffer)
+        image = ImageReader(buffer)
         img_n : int = img.size[0]
         img_l : int = img.size[1]
         xsafespace = 0.0
@@ -658,7 +662,7 @@ for i in Ordered:
             x = CPosition[0]
             y = CPosition[1]
         Pdf.setPageSize((Width, Height))
-        Pdf.drawImage(imagen, x, y, width=imgtx, height=imgty, preserveAspectRatio=Scaling)
+        Pdf.drawImage(image, x, y, width=imgtx, height=imgty, preserveAspectRatio=Scaling)
         Pdf.showPage()
 
 Pdf.save()

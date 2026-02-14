@@ -41,21 +41,25 @@ while True:
         break
 
 #Overwrite protection
-NameF = ""
-if Path(str(Path(Route)) + "/" + str(Path(Route).name) +".pdf").exists():
-    NameF = "0"
+NameA = ""
+if Path(str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf").exists():
+    NameA = "1"
     for i in Path(Route).iterdir():
         if i.stem[:len(Path(Route).name)] == str(Path(Route).name):
-            NameF = str(int(NameF) + 1)
-    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameF + ")" + ".pdf", pagesize=A4)
+            if Path(str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameA + ")" + ".pdf").exists():
+                NameA = str(int(NameA) + 1)
+            else:
+                break
+    Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + " (" + NameA + ")" + ".pdf", pagesize=A4)
 else:
     Pdf : canvas.Canvas = canvas.Canvas(str(Path(Route)) + "/" + str(Path(Route).name) + ".pdf", pagesize=A4)
+
 Width, Height = A4
 
 #Image selection
 for i in Path(Route).iterdir():
     chara = 0
-    if i.suffix.lower() in [".png", ".jpg", ".jpeg", "webp", ".tiff", ".bmp", "ico"]:
+    if i.suffix.lower() in [".png", ".jpg", ".jpeg", ".webp", ".tiff", ".bmp", "ico"]:
         for j in i.stem:
             if j in ["0","1","2","3","4","5","6","7","8","9"]:
                 chara = chara + 1
@@ -125,7 +129,7 @@ for i in Ordered:
         buffer = BytesIO()
         img = img.convert("RGB")
         img.save(buffer, format="JPEG", quality=85, subsampling=2,optimize=True)
-        img = ImageReader(buffer)
+        image = ImageReader(buffer)
         img_n : int = img.size[0]
         img_l : int = img.size[1]
         match Orientation:
@@ -152,7 +156,7 @@ for i in Ordered:
         x : float = (Width - img_n) / 2
         y : float = (Height - img_l) / 2
         Pdf.setPageSize((Width, Height))
-        Pdf.drawImage(img, x, y, width=xsafespace, height=ysafespace, preserveAspectRatio=Scaling)
+        Pdf.drawImage(image, x, y, width=xsafespace, height=ysafespace, preserveAspectRatio=Scaling)
         Pdf.showPage()
 
 Pdf.save()

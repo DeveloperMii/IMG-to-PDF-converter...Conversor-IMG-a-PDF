@@ -71,7 +71,6 @@ These three versions have a .py (Python file) or .exe (Windows executable) versi
 
 The program runs in a terminal and requests data step by step:
 > The program does not work if arguments are passed to it via the terminal.
-
 1. It asks the user for the folder where the images are located.
 2. It sorts the files alphabetically.
 > The order of the pages will be determined by the file names.
@@ -190,7 +189,6 @@ Estas 3 versiones tienen una versión en .py (Archivo de Python) o .exe (Ejecuta
 
 El programa se ejecuta en terminal y pide datos poco a poco:
 > El programa no funciona si se le pasan argumentos por terminal.
-
 1. Pide al usuario la carpeta donde están las imágenes.
 2. Ordena los archivos por orden alfabetico.
 > El orden de las paginas estara dictaminado por el nombre de los archivos.

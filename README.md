@@ -40,7 +40,7 @@
 ### Description
 
 This Python script converts a set of images in the same folder into a .pdf file created in the folder where the images are located.
-It is not necessary to pass the data through the terminal, as it requests it little by little and, depending on the edition, requests more or less data.
+You don't need to enter the data into the terminal, since it doesn't support it; instead, it asks for the information bit by bit, and depending on the version, it requests more or less data.
 In addition, there are three versions of the file, each designed for a specific use/user. I will describe the differences between the editions later on.
 These three versions have a .py (Python file) or .exe (Windows executable) version in case you want to review the code or run it without installing anything.
 
@@ -158,7 +158,7 @@ Current version: 1.0
 ### Descripcion
 
 Este script de python convierte un conjunto de imágenes que estén en una misma carpeta a un archivo .pdf creado en la carpeta donde están las imágenes.
-No es necesario pasarle los datos por la terminal ya que el los va pidendo poco a poco y dependiendo de la edicion pide mas o menos datos.
+No es necesario pasarle los datos por la terminal ya que no los soporta el los va pidendo poco a poco y dependiendo de la edicion pide mas o menos datos.
 Además de que existen 3 versiones del archivo cada una pensada para un uso/usuario concreto, describire las diferencias entre las ediciones mas adelante.
 Estas 3 versiones tienen una versión en .py (Archivo de Python) o .exe (Ejecutable de Windows) por si quieres revisar el codigo o ejecutarlo sin instalar nada.
 
